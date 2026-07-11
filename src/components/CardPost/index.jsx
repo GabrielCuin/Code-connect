@@ -5,23 +5,28 @@ import { ThumbsUpButton } from "./ThumbsUpButton";
 import { ModalComment } from "../ModalComment";
 import { Link } from "react-router";
 import { useState } from "react";
+import { http } from "../../api";
 
 export const CardPost = ({ post }) => {
   const [likes, setLikes] = useState(post.likes);
+  const [comments, setComments] = useState(post.comments);
   const handleLikeButton = () => {
     const token = localStorage.getItem("access_token");
 
-    fetch(`http://localhost:3000/blog-posts/${post.id}/like`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }).then((response) => {
-      if (response.ok) {
+    http
+      .post(
+        `blog-posts/${post.id}/like`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+      .then(() => {
         setLikes((oldState) => oldState + 1);
         console.log("Like");
-      }
-    });
+      });
   };
   return (
     <article className={styles.card}>
@@ -43,7 +48,7 @@ export const CardPost = ({ post }) => {
           </div>
           <div className={styles.action}>
             <ModalComment />
-            <p>{post.comments.length}</p>
+            <p>{comments.length}</p>
           </div>
         </div>
         <Author author={post.author} />
