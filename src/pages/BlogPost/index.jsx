@@ -14,6 +14,16 @@ export const BlogPost = () => {
   const { slug } = useParams();
   const [post, setPost] = useState(null);
   const navigate = useNavigate();
+  const [comments, setComments] = useState([]);
+
+  const handleDelete = (commentId) => {
+    const isConfirmed = confirm("Tem certeza que deseja remover o comentário?");
+    if (isConfirmed) {
+      http.delete(`comments/${commentId}`).then(() => {
+        setComments((oldState) => oldState.filter((c) => c.id !== commentId));
+      });
+    }
+  };
 
   useEffect(() => {
     http
@@ -66,7 +76,7 @@ export const BlogPost = () => {
       <div className={styles.code}>
         <ReactMarkdown>{post.markdown}</ReactMarkdown>
       </div>
-      <CommentList comments={post.comments} />
+      <CommentList comments={post.comments} onDelete={handleDelete} />
     </main>
   );
 };

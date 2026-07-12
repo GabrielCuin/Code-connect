@@ -40,12 +40,11 @@ export const useAuth = () => {
       });
 
       const data = response.data;
-
       setUser(data.user);
-      localStorage.setItem("user_auth", JSON.stringify(data.user));
+      localStorage.setItem("auth_user", JSON.stringify(data.user));
       localStorage.setItem("access_token", data.access_token);
 
-      return { success: true };
+      return { success: true, user };
     } catch (error) {
       return { success: false, error: error.message };
     }
